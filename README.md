@@ -7,6 +7,7 @@ This container will delete pods with these statuses by default but these can be 
 - Evicted
 - Completed
 - NodeAffinity
+- Error
 
 ## Requirements
 - Serviceaccount
