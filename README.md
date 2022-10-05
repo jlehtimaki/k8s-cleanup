@@ -54,3 +54,33 @@ roleRef:
 You can disable one/multiple rules by adding argument to the job.
 
 ## Example
+Clean every pod except the ones with Error and Completed
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: k8s-cleanup
+  namespace: default
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      completions: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - name: k8s-cleanup
+              args:
+                - Error
+                - Completed
+              image: ghcr.io/jlehtimaki/k8s-cleanup:latest
+              imagePullPolicy: Always
+          restartPolicy: Never
+          serviceAccountName: k8s-cleanup
+          terminationGracePeriodSeconds: 30
+  schedule: '*/1 * * * *'
+  successfulJobsHistoryLimit: 3
+```
